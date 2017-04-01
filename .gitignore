@@ -1,0 +1,26 @@
+# # で始まる行はコメント.
+# 空行は無視.
+# ! で始まる行は残りのパターンを否定.
+# / で始まる場合はカレントディレクトリ(この.gitignoreのある場所)からを表す.
+# / で終わる場合はディレクトリのみを表す.
+# 複数マッチするパターンがある場合は最後にマッチするものが優先.
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+*.pdb
+
+# unity
+/Library/
+/BuildTarget/
+/Temp/
+/obj/
+
+/*.csproj
+/*.booproj
+/*.unityproj
+/*.sln
+/*.userprefs
+
