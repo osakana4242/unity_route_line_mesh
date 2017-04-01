@@ -64,14 +64,18 @@ public class RouteLineMesh : MonoBehaviour
 
 	class Inner : System.IDisposable
 	{
+		static int idMainTex_ST_ = Shader.PropertyToID("_MainTex_ST");
 		MeshFilter meshFilter_;
 		MeshRenderer meshRenderer_;
 		Mesh mesh_;
 		VertexHelper vh_;
 		float scroll_;
+		MaterialPropertyBlock block_;
+		Vector2 textureScale_;
 
 		public Inner(GameObject gameObject)
 		{
+			block_ = new MaterialPropertyBlock();
 			meshFilter_ = gameObject.GetComponent<MeshFilter>();
 			meshRenderer_ = gameObject.GetComponent<MeshRenderer>();
 
@@ -84,7 +88,7 @@ public class RouteLineMesh : MonoBehaviour
 		{
 			meshRenderer_ = null;
 			meshFilter_ = null;
-
+			block_ = null;
 			vh_.Clear();
 			vh_ = null;
 			Object.DestroyImmediate(mesh_);
@@ -97,7 +101,8 @@ public class RouteLineMesh : MonoBehaviour
 			}
 			set {
 				scroll_ = value;
-				meshRenderer_.material.mainTextureOffset = new Vector2(-scroll_, 0f);
+				block_.SetVector(idMainTex_ST_, new Vector4(textureScale_.x, textureScale_.y, -scroll_, 0f));
+				meshRenderer_.SetPropertyBlock(block_);
 			}
 		}
 
@@ -136,6 +141,8 @@ public class RouteLineMesh : MonoBehaviour
 					addLine(p3, p4, data.weight, data.weight, 0f, ref length, ref vOffset);
 				}
 			}
+			var material = meshRenderer_.sharedMaterial;
+			textureScale_ = (material == null) ? Vector2.zero : material.mainTextureScale;
 			Scroll = data.scroll_;
 			vh_.FillMesh(mesh_);
 		}
